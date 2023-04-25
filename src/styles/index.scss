@@ -1,0 +1,70 @@
+@import "login", "reset";
+
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans&display=swap");
+* {
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+button {
+  align-items: center;
+  padding: 6px 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  border-radius: 6px;
+  color: rgb(48, 48, 48);
+  background: #fff;
+  border: none;
+  text-decoration: none;
+  box-shadow: 0px 0.5px 1px rgba(0, 0, 0, 0.1),
+    0px 0px 0px 1.5px rgba(46, 48, 53, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin: 3px;
+  outline: 0;
+}
+
+button:focus {
+  box-shadow: 0px 0.5px 1px rgba(0, 0, 0, 0.1),
+    0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+  outline: 0;
+}
+
+button:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.LoadingContainer {
+  width: 100vw;
+  height: 100vh;
+  background: #1c1d1f;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+img.LoaderImage {
+  animation: rotate 4s linear 0s infinite normal;
+  width: 25px;
+  opacity: 40%;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
