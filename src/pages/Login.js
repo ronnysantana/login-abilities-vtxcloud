@@ -22,7 +22,30 @@ export const Login = () => {
   const usrRef = useRef();
   const pswRef = useRef();
 
-  const handleSignIn = useCallback(async () => {
+  const handleSignIn = () => {
+    var validatePassword = new RegExp("^([0-9]{4})$");
+
+    if (validatePassword.test(psw)) {
+      fieldsetRef.current.disabled = true;
+      (async () => {
+        let AuthLogin = await signIn(usr, psw);
+        if (!AuthLogin) {
+          alert("algo de errado não esta certo");
+          setPsw("");
+          pswRef.current.focus();
+        }
+        /* fieldsetRef.current.disabled = false; */
+      })();
+
+      return console.log(psw, true);
+    } else {
+      alert("digite a senha, 4 caracteres numericos");
+      pswRef.current.focus();
+      return console.log(psw, false);
+    }
+  };
+
+  const handleSignIn2 = useCallback(async () => {
     if (psw.match(/^([0-9]{4})$/)) {
       return console.log(psw.length);
     } else {
@@ -63,7 +86,7 @@ export const Login = () => {
           </li>
         ))}
       </ul>
-      {usr} - {psw.toString()}
+      {usr}
       <fieldset ref={fieldsetRef}>
         <label htmlFor="user">
           <input
@@ -78,11 +101,12 @@ export const Login = () => {
         </label>
         <label htmlFor="pass">
           <input
-            type="text"
+            type="password"
             id="pass"
             placeholder="pass"
             name="pass"
             ref={pswRef}
+            /* ref={(pswRef) => pswRef && pswRef.focus()} */
             value={psw}
             onChange={(e) => setPsw(e.target.value)}
           />
