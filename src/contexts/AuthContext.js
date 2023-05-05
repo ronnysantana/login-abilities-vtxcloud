@@ -28,11 +28,12 @@ export default function AuthProvider({ children }) {
 
   const [notAccessAbilitie, setNotAccessAbilitie] = useState(false);
 
-  const [savedUsers, setSavedUsers] = useStorageState( //array
+  const [saveUser, setSaveUser] = useState(false); //boolean
+  const [savedUsers, setSavedUsers] = useStorageState(
+    //array
     `${process.env.REACT_APP_AUTH_USER}SavedUsers`,
     []
   );
-  const [saveUser, setSaveUser] = useState(true); //boolean
 
   const { loading, setLoading } = useLoading();
 
@@ -92,21 +93,13 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const signIn = useCallback(async (user, pass) => {
-
-    //return console.log(user, pass);
+    //return console.log(`saveUser: ${saveUser}`);
     setLoading(true);
     try {
       let AuthLogin = await Auth.Login(user, pass);
       if (AuthLogin.status === 202) {
         setReqResUser(AuthLogin.data);
         setLoading(false);
-        
-        if(saveUser == true) {
-          if (!savedUsers.find((savedUser) => savedUser.mail == user)) {
-            console.log("não existe", savedUsers.mail, user);
-            setSavedUsers((prevState) => [...prevState, { mail: user, name: AuthLogin.data.user.name }]); //AuthLogin.user.name
-          }
-        }
 
         return AuthLogin.data;
       }
@@ -119,6 +112,7 @@ export default function AuthProvider({ children }) {
         console.log(error.response.status, "401 Unauthorized");
         console.log(error.response);
         setLoading(false);
+        return error.response.status;
       }
     }
   }, []);

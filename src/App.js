@@ -62,7 +62,7 @@ function App() {
   return (
     <div className="App">
       <LoadingContainer />
-      {JSON.stringify(saveUser)}
+      {/* saveUser: {JSON.stringify(saveUser)} */}
       {!loading && user && user?.modules && (
         <>
           <NavLink to="/">home </NavLink>
@@ -75,9 +75,7 @@ function App() {
         </>
       )}
       {notAccessAbilitie && showMessage()}
-
       {!loading && <AppRoutes />}
-
       {!loading && user && auth && (
         <>
           <CanAbilities abilities={["invoices.update"]}>

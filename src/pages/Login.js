@@ -8,6 +8,7 @@ import { useLocalStorage } from "../components/useLocalStorage";
 
 import { api } from "../components/api";
 import Auth from "../components/api/auth";
+import { validatePassword } from "../components/utils/RegExp";
 
 export const Login = () => {
   const { auth, signIn, savedUsers, setSavedUsers, saveUser, setSaveUser } =
@@ -18,19 +19,31 @@ export const Login = () => {
 
   const [usr, setUsr] = useState("pix@rsantana.us");
   const [psw, setPsw] = useState("");
+  const [pswPlaceHolder, setPswPlaceHolder] = useState("Senha");
   const fieldsetRef = useRef();
   const usrRef = useRef();
   const pswRef = useRef();
 
-  const handleSignIn = () => {
-    var validatePassword = new RegExp("^([0-9]{4})$");
-
+  const handleSignIn = (event = 0) => {
+    //return console.log(savedUsers.find((savedUser) => savedUser.mail == usr));
     if (validatePassword.test(psw)) {
       fieldsetRef.current.disabled = true;
       (async () => {
         let AuthLogin = await signIn(usr, psw);
-        if (!AuthLogin) {
-          alert("algo de errado não esta certo");
+        console.log(AuthLogin);
+        if (AuthLogin) {
+          if (saveUser == true) {
+            if (!savedUsers.find((savedUser) => savedUser.mail == usr)) {
+              console.log("não existe", savedUsers.mail, usr);
+              setSavedUsers((prevState) => [
+                ...prevState,
+                { mail: usr, name: AuthLogin.user.name },
+              ]); //AuthLogin.user.name
+            }
+          }
+        } else {
+          console.log(AuthLogin);
+          setPswPlaceHolder("algo de errado não esta certo");
           setPsw("");
           pswRef.current.focus();
         }
@@ -39,7 +52,8 @@ export const Login = () => {
 
       return console.log(psw, true);
     } else {
-      alert("digite a senha, 4 caracteres numericos");
+      setPswPlaceHolder("digite a senha, 4 caracteres numericos");
+      setPsw("");
       pswRef.current.focus();
       return console.log(psw, false);
     }
@@ -77,72 +91,114 @@ export const Login = () => {
     return <Navigate to="/" replace={true} />;
   }
 
-  return (
-    <section>
-      <ul>
-        {savedUsers.map((user, key) => (
-          <li key={key}>
-            Olá {user.name}, digite sua senha {user.mail}
-          </li>
-        ))}
-      </ul>
-      {usr}
-      <fieldset ref={fieldsetRef}>
-        <label htmlFor="user">
-          <input
-            type="text"
-            id="user"
-            placeholder="user"
-            name="user"
-            ref={usrRef}
-            value={usr}
-            onChange={(e) => setUsr(e.target.value)}
-          />
-        </label>
-        <label htmlFor="pass">
+  const activeUserSaved = (user, key) => {
+    setUsr(user.mail);
+    pswRef.current.focus();
+    console.log(user, key);
+  };
+
+  const savedUsersComponentStructure = (user, key) => {
+    return (
+      <li onClick={() => activeUserSaved(user, key)} key={key}>
+        <p>Olá {user.name}, digite sua senha</p>
+        <label className="lblLogin" htmlFor="pass">
+          <i></i>
           <input
             type="password"
             id="pass"
-            placeholder="pass"
+            placeholder={pswPlaceHolder}
             name="pass"
             ref={pswRef}
             /* ref={(pswRef) => pswRef && pswRef.focus()} */
             value={psw}
             onChange={(e) => setPsw(e.target.value)}
+            /* onKeyPress={handleSignIn} */
+          />
+          <button onClick={() => handleSignIn()} className="btnLogin go">
+            go
+          </button>
+        </label>
+      </li>
+    );
+  };
+
+  return (
+    <section>
+      {savedUsers.length >= 1 && (
+        <ul className="structureSavedUserContainer">
+          {savedUsers.map((user, key) =>
+            savedUsersComponentStructure(user, key)
+          )}
+        </ul>
+      )}
+
+      {/* {usr} */}
+      {console.log(savedUsers)}
+      <fieldset className="fstLogin" ref={fieldsetRef}>
+        <label className="lblLogin" htmlFor="user">
+          <i>Usuário</i>
+          <input
+            type="text"
+            id="user"
+            placeholder={"user"}
+            name="user"
+            ref={usrRef}
+            value={usr}
+            onChange={(e) => setUsr(e.target.value)}
+          />
+          <input
+            type="checkbox"
+            checked={saveUser}
+            className="apple-switch"
+            onChange={(e) => setSaveUser(!saveUser)}
           />
         </label>
-
-        <input
-          type="checkbox"
-          checked={saveUser}
-          onChange={(e) => setSaveUser(!saveUser)}
-        />
-
-        <button onClick={() => handleSignIn()}>go</button>
+        <label className="lblLogin" htmlFor="pass">
+          <i>Senha</i>
+          <input
+            type="password"
+            id="pass"
+            placeholder={pswPlaceHolder}
+            name="pass"
+            ref={pswRef}
+            /* ref={(pswRef) => pswRef && pswRef.focus()} */
+            value={psw}
+            onChange={(e) => setPsw(e.target.value)}
+            /* onKeyPress={handleSignIn} */
+          />
+          <button onClick={() => handleSignIn()} className="btnLogin go">
+            go
+          </button>
+        </label>
       </fieldset>
       <br />
       <br />
+
+      {/*}
+      
       <button
         className="btnLogin"
         onClick={() => signIn("pix@rsantana.us", "4586")}
       >
         pix
-        {/* host.update,host.create,host.view,client.update,client.view  */}
+        // host.update,host.create,host.view,client.update,client.view
       </button>
       <button
         className="btnLogin"
         onClick={() => signIn("m@rsantana.us", "4586")}
       >
         m
-        {/* host.create,host.view,client.all,user.update,invoice.update,invoice.update,user.create,user.delete  */}
+        // host.create,host.view,client.all,user.update,invoice.update,invoice.update,user.create,user.delete
       </button>
       <button
         className="btnLogin"
         onClick={() => signIn("vtxcloud@rsantana.us", "4586")}
       >
         vtxcloud
-        {/* * */}
+        
       </button>
+      
+      {*/}
     </section>
   );
 };
