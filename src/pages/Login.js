@@ -24,6 +24,8 @@ export const Login = () => {
   const usrRef = useRef();
   const pswRef = useRef();
 
+  const [sadsa, setsadsa] = useState();
+
   const handleSignIn = (event = 0) => {
     //return console.log(savedUsers.find((savedUser) => savedUser.mail == usr));
     if (validatePassword.test(psw)) {
@@ -94,7 +96,8 @@ export const Login = () => {
   const activeUserSaved = (user, key) => {
     setUsr(user.mail);
     pswRef.current.focus();
-    console.log(user, key);
+    setsadsa(`${sadsa} ${user}+${key})`);
+    console.log(user, key, sadsa);
   };
 
   const savedUsersComponentStructure = (user, key) => {
