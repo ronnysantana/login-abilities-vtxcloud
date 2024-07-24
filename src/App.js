@@ -56,7 +56,7 @@ function App() {
       theme: "dark",
       icon: "warn",
       displayMode: "replace", // once, replace
-    })
+    }),
   );
 
   return (
@@ -82,7 +82,7 @@ function App() {
         <>
           <CanAbilities abilities={["invoices.update"]}>
             <button onClick={() => alert("invoices.update")}>
-              invoices.update
+              invoicesUpdate
             </button>
           </CanAbilities>
           <CanAbilities abilities={["clients.view"]}>
