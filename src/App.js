@@ -82,7 +82,7 @@ function App() {
         <>
           <CanAbilities abilities={["invoices.update"]}>
             <button onClick={() => alert("invoices.update")}>
-              invoicesUpdate
+              invoices.Update
             </button>
           </CanAbilities>
           <CanAbilities abilities={["clients.view"]}>
